@@ -1,12 +1,12 @@
 import { Header } from "@/components/header"
 import { Hero } from "@/components/hero"
 import { Stats } from "@/components/stats"
-import { Services } from "@/components/services"
+import { Industries } from "@/components/Industries"
 import { Clients } from "@/components/clients"
 import { Process } from "@/components/process"
+import { Portfolio } from "@/components/portfolio"
 import { Testimonials } from "@/components/testimonials"
 import { FAQ } from "@/components/faq"
-import { Careers } from "@/components/careers"
 import { ContactForm } from "@/components/contact-form"
 import { Footer } from "@/components/footer"
 
@@ -16,12 +16,12 @@ export default function Home() {
       <Header />
       <Hero />
       <Stats />
-      <Services />
+      <Industries />
       <Clients />
       <Process />
+      <Portfolio />
       <Testimonials />
       <FAQ />
-      <Careers />
       <ContactForm />
       <Footer />
     </main>

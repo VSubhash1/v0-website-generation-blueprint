@@ -10,8 +10,8 @@ const poppins = Poppins({
 })
 
 export const metadata: Metadata = {
-  title: "PixelPerfect - Digital Growth & Web Solutions",
-  description: "PixelPerfect blends smart marketing with powerful web development to help your brand grow.",
+  title: "Govira - Digital Growth & Web Solutions",
+  description: "Govira blends smart marketing with powerful web development to help your brand grow.",
   generator: "v0.app",
   icons: {
     icon: [

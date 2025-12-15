@@ -27,10 +27,8 @@ export function Footer() {
           {/* Company Info */}
           <div className="space-y-4">
             <Link href="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-lg">P</span>
-              </div>
-              <span className="font-semibold text-xl">PixelPerfect</span>
+              <img src="https://image2url.com/images/1765796822907-5d6e2d7e-9bfa-4ba7-ab5a-254ac83fb419.png" alt="Govira Logo" className="w-8 h-8" />
+              <span className="font-semibold text-xl">Govira</span>
             </Link>
             <p className="text-background/70 leading-relaxed">
               Empowering businesses with innovative digital solutions that drive growth and success.
@@ -81,14 +79,14 @@ export function Footer() {
             <ul className="space-y-3 text-background/70">
               <li>123 Digital Street</li>
               <li>Tech City, TC 12345</li>
-              <li>hello@pixelperfect.com</li>
+              <li>hello@govira.com</li>
               <li>+1 (555) 123-4567</li>
             </ul>
           </div>
         </div>
 
         <div className="border-t border-background/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-background/60 text-sm">© {new Date().getFullYear()} PixelPerfect. All rights reserved.</p>
+          <p className="text-background/60 text-sm">© {new Date().getFullYear()} Govira. All rights reserved.</p>
           <div className="flex gap-6 text-sm">
             <Link href="#" className="text-background/60 hover:text-background transition-colors">
               Privacy Policy

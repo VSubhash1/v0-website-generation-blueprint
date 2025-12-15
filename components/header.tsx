@@ -7,11 +7,10 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 const navItems = [
-  { label: "Services", href: "#services" },
+  { label: "Industries", href: "#industries" },
   { label: "Portfolio", href: "#clients" },
   { label: "Process", href: "#process" },
   { label: "Testimonials", href: "#testimonials" },
-  { label: "Careers", href: "#careers" },
 ]
 
 export function Header() {
@@ -37,10 +36,8 @@ export function Header() {
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">P</span>
-            </div>
-            <span className="font-semibold text-xl text-foreground">PixelPerfect</span>
+            <img src="https://image2url.com/images/1765796822907-5d6e2d7e-9bfa-4ba7-ab5a-254ac83fb419.png" alt="Govira Logo" className="w-8 h-8" />
+            <span className="font-semibold text-xl text-foreground">Govira</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -59,7 +56,7 @@ export function Header() {
           {/* CTA Button */}
           <div className="hidden lg:block">
             <Button asChild>
-              <Link href="#contact">Get in Touch</Link>
+              <Link href="#contact">Book a call</Link>
             </Button>
           </div>
 
@@ -94,7 +91,7 @@ export function Header() {
             ))}
             <Button asChild className="mt-2">
               <Link href="#contact" onClick={() => setIsMobileMenuOpen(false)}>
-                Get in Touch
+                Book a call
               </Link>
             </Button>
           </nav>

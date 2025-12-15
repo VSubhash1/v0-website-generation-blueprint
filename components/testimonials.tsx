@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card"
 const testimonials = [
   {
     quote:
-      "PixelPerfect transformed our online presence. Our website traffic increased by 300% within three months of launching.",
+      "Govira transformed our online presence. Our website traffic increased by 300% within three months of launching.",
     name: "Sarah Johnson",
     company: "TechFlow Inc.",
     role: "CEO",
@@ -21,7 +21,7 @@ const testimonials = [
   },
   {
     quote:
-      "Working with PixelPerfect was a game-changer. Their strategic approach to digital marketing doubled our leads.",
+      "Working with Govira was a game-changer. Their strategic approach to digital marketing doubled our leads.",
     name: "Emily Rodriguez",
     company: "CloudNine Systems",
     role: "Founder",

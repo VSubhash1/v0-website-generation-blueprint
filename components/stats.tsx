@@ -1,37 +1,42 @@
-"use client"
+"use client";
 
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useRef, useState } from "react";
 
 const stats = [
-  { value: 500, suffix: "+", label: "Projects Completed" },
-  { value: 12, suffix: "+", label: "Years Experience" },
-  { value: 50, suffix: "+", label: "Industries Served" },
-  { value: 99, suffix: "%", label: "Client Satisfaction" },
-]
+  { value: 5, label: "Projects Completed" },
+  { value: 1, label: "Years Experience" },
+  { value: 10, label: "Employees" },
+  { value: 100, label: "Client Satisfaction" },
+];
 
-function useCountUp(target: number, duration = 2000, start: boolean) {
-  const [count, setCount] = useState(0)
+type StatItemProps = {
+  value: number;
+  label: string;
+  suffix?: string;
+  show: boolean;
+};
+
+function StatItem({ value, label, suffix = "", show }: StatItemProps) {
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
-    if (!start) return
-
-    let startTime: number
-    const step = (timestamp: number) => {
-      if (!startTime) startTime = timestamp
-      const progress = Math.min((timestamp - startTime) / duration, 1)
-      setCount(Math.floor(progress * target))
-      if (progress < 1) {
-        requestAnimationFrame(step)
-      }
+    if (show) {
+      const duration = 2000; // 2 seconds
+      const steps = 60;
+      const increment = value / steps;
+      let current = 0;
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= value) {
+          setCount(value);
+          clearInterval(timer);
+        } else {
+          setCount(Math.floor(current));
+        }
+      }, duration / steps);
+      return () => clearInterval(timer);
     }
-    requestAnimationFrame(step)
-  }, [target, duration, start])
-
-  return count
-}
-
-function StatItem({ value, suffix, label, start }: { value: number; suffix: string; label: string; start: boolean }) {
-  const count = useCountUp(value, 2000, start)
+  }, [show, value]);
 
   return (
     <div className="text-center p-6">
@@ -41,40 +46,44 @@ function StatItem({ value, suffix, label, start }: { value: number; suffix: stri
       </div>
       <div className="text-muted-foreground font-medium">{label}</div>
     </div>
-  )
+  );
 }
 
 export function Stats() {
-  const [isVisible, setIsVisible] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
+          setIsVisible(true);
+          observer.disconnect();
         }
       },
-      { threshold: 0.3 },
-    )
+      { threshold: 0.3 }
+    );
 
-    if (ref.current) {
-      observer.observe(ref.current)
-    }
+    if (ref.current) observer.observe(ref.current);
 
-    return () => observer.disconnect()
-  }, [])
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <section ref={ref} className="py-16 lg:py-20 bg-secondary">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
           {stats.map((stat, index) => (
-            <StatItem key={index} {...stat} start={isVisible} />
+            <StatItem
+              key={index}
+              value={stat.value}
+              label={stat.label}
+              suffix={stat.label === "Client Satisfaction" ? "%" : ""}
+              show={isVisible}
+            />
           ))}
         </div>
       </div>
     </section>
-  )
+  );
 }

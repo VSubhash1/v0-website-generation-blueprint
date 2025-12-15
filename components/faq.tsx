@@ -2,7 +2,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 
 const faqs = [
   {
-    question: "What services does PixelPerfect offer?",
+    question: "What services does Govira offer?",
     answer:
       "We offer a comprehensive range of digital services including web design, web development, e-commerce solutions, SEO, PPC advertising, social media marketing, and lead generation. Our team tailors solutions to meet your specific business needs.",
   },
