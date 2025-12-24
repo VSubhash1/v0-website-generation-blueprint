@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Menu, X } from "lucide-react"
+import { Menu, X, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
@@ -13,9 +13,19 @@ const navItems = [
   { label: "Testimonials", href: "#testimonials" },
 ]
 
+const quickLinks = [
+  { label: "Services", href: "#services" },
+  { label: "Portfolio", href: "#clients" },
+  { label: "Our Projects", href: "#process" },
+  { label: "Testimonials", href: "#testimonials" },
+  { label: "Careers", href: "#careers" },
+  { label: "Contact", href: "#contact" },
+]
+
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isFooterMenuOpen, setIsFooterMenuOpen] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -53,8 +63,31 @@ export function Header() {
             ))}
           </nav>
 
-          {/* CTA Button */}
-          <div className="hidden lg:block">
+          {/* CTA Button and Footer Menu */}
+          <div className="hidden lg:flex items-center gap-3">
+            <div className="relative">
+              <button
+                onClick={() => setIsFooterMenuOpen(!isFooterMenuOpen)}
+                className="p-2 hover:bg-secondary rounded-md transition-colors"
+                aria-label="Toggle menu"
+              >
+                <ChevronDown className="w-5 h-5 text-foreground" />
+              </button>
+              {isFooterMenuOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-card border border-border rounded-lg shadow-lg z-40">
+                  {quickLinks.map((link) => (
+                    <Link
+                      key={link.label}
+                      href={link.href}
+                      className="block px-4 py-2 text-sm text-foreground hover:bg-secondary transition-colors first:rounded-t-lg last:rounded-b-lg"
+                      onClick={() => setIsFooterMenuOpen(false)}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
             <Button asChild>
               <Link href="#contact">Book a call</Link>
             </Button>
