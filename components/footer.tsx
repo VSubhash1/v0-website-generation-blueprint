@@ -4,7 +4,7 @@ import { Facebook, Twitter, Linkedin, Instagram } from "lucide-react"
 const quickLinks = [
   { label: "Services", href: "#services" },
   { label: "Portfolio", href: "#clients" },
-  { label: "Process", href: "#process" },
+  { label: "Our Projects", href: "#process" },
   { label: "Testimonials", href: "#testimonials" },
   { label: "Careers", href: "#careers" },
   { label: "Contact", href: "#contact" },
