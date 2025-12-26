@@ -1,8 +1,7 @@
 import { Header } from "@/components/header"
 import { Hero } from "@/components/hero"
-import { Stats } from "@/components/stats"
+import { Services } from "@/components/services"
 import { Industries } from "@/components/Industries"
-import { Clients } from "@/components/clients"
 import { Process } from "@/components/process"
 import { Portfolio } from "@/components/portfolio"
 import { Testimonials } from "@/components/testimonials"
@@ -17,9 +16,8 @@ export default function Home() {
       <SocialSidebar />
       <Header />
       <Hero />
-      <Stats />
+      <Services />
       <Industries />
-      <Clients />
       <Process />
       <Portfolio />
       <Testimonials />

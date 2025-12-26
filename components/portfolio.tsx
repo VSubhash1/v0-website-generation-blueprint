@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
+import Link from "next/link"
 
 const projects = [
   {
@@ -10,6 +10,7 @@ const projects = [
     title: "Veerance",
     description: "Modern online store with seamless checkout and clothes catalog",
     image: "/veerance.png",
+    href: "/portfolio/veerance",
   },
   {
     id: 2,
@@ -17,6 +18,7 @@ const projects = [
     title: "Anchor Space",
     description: "Complete booking platform with functional website for co-working space",
     image: "/anchor-space.png",
+    href: "/portfolio/anchor-space",
   },
   {
     id: 3,
@@ -24,6 +26,7 @@ const projects = [
     title: "Raksha Safety App",
     description: "iOS and Android app for personal safety with real-time location tracking",
     image: "/raksha-safety-app.jpg",
+    href: "/portfolio/raksha-safety-app",
   },
   {
     id: 4,
@@ -31,6 +34,7 @@ const projects = [
     title: "Aditi Infrastructures",
     description: "Aditi Infrastructures is a leading real estate developer specializing in residential and commercial properties",
     image: "/aditi-infrastructures.jpg",
+    href: "/portfolio/aditi-infrastructures",
   },
   {
     id: 5,
@@ -38,6 +42,7 @@ const projects = [
     title: "ARK Industries",
     description: "Manufacturing company website with fastening products and solutions",
     image: "/ark-industries.png",
+    href: "/portfolio/ark-industries",
   },
   {
     id: 6,
@@ -45,6 +50,7 @@ const projects = [
     title: "Habit Tracker App",
     description: "Comprehensive health and fitness tracking app for iOS and Android",
     image: "/habit-tracker.png",
+    href: "/portfolio/habit-tracker-app",
   },
 ]
 
@@ -63,9 +69,10 @@ export function Portfolio() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {projects.map((project, index) => (
-            <div
+            <Link
               key={project.id}
-              className="group relative aspect-[4/3] rounded-xl overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-2xl"
+              href={project.href}
+              className="group relative aspect-[4/3] rounded-xl overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-2xl block"
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
             >
@@ -80,7 +87,22 @@ export function Portfolio() {
 
               <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                 <p className="text-xs lg:text-sm text-blue-400 mb-2 font-medium">{project.category}</p>
-                <h3 className="text-xl lg:text-2xl font-bold mb-2">{project.title}</h3>
+                <div className="relative overflow-hidden mb-2 w-full">
+                  <div
+                    className={`flex whitespace-nowrap ${hoveredIndex === index ? 'animate-scroll-text' : ''
+                      }`}
+                  >
+                    <h3 className="text-xl lg:text-2xl font-bold inline-block pr-8">
+                      {project.title}
+                    </h3>
+                    <h3 className="text-xl lg:text-2xl font-bold inline-block pr-8">
+                      {project.title}
+                    </h3>
+                    <h3 className="text-xl lg:text-2xl font-bold inline-block pr-8">
+                      {project.title}
+                    </h3>
+                  </div>
+                </div>
                 <p
                   className={`text-sm text-gray-300 transition-all duration-300 ${hoveredIndex === index ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
                     }`}
@@ -88,7 +110,7 @@ export function Portfolio() {
                   {project.description}
                 </p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
