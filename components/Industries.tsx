@@ -1,6 +1,3 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
 import {
   Building2,
   UtensilsCrossed,
@@ -58,26 +55,8 @@ const industries = [
 ];
 
 export function Industries() {
-  const [visible, setVisible] = useState(false);
-  const sectionRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.2 }
-    );
-
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <section id="industries" ref={sectionRef} className="py-16 lg:py-24 bg-background">
+    <section id="industries" className="py-16 lg:py-24 bg-background">
       <div className="container mx-auto px-4 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12 lg:mb-16">
@@ -92,55 +71,33 @@ export function Industries() {
 
         {/* Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {industries.map((item, index) => {
-            const delayClass =
-              index === 0
-                ? "animation-delay-100"
-                : index === 1
-                ? "animation-delay-200"
-                : index === 2
-                ? "animation-delay-300"
-                : index === 3
-                ? "animation-delay-400"
-                : "animation-delay-500";
-
-            return (
-              <Link
-                key={index}
-                href={item.href}
-                className="group block"
+          {industries.map((item, index) => (
+            <Link
+              key={index}
+              href={item.href}
+              className="block transition-transform hover:scale-105"
+            >
+              <Card
+                className="border border-border bg-card shadow-sm h-full cursor-pointer hover:shadow-lg transition-shadow"
               >
-                <Card
-                  className={`relative overflow-hidden border border-border/60 bg-card shadow-sm h-full cursor-pointer rounded-xl
-                  {industries.map((item, index) => (
-                    <Link
-                      key={index}
-                      href={item.href}
-                      aria-label={item.title}
-                      className="group block"
-                    >
-                      <Card
-                        className="relative overflow-hidden border border-border/60 bg-card/80 backdrop-blur-sm shadow-sm h-full cursor-pointer rounded-xl
-                        hover-tilt-lift hover:shadow-xl hover:shadow-primary/20 hover:ring-1 hover:ring-primary/20 active:scale-[.98]
-                        transition-all duration-300 ease-out"
-                      >
-                        {/* Soft gradient overlay */}
-                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
-                        <CardContent className="relative p-6 lg:p-8">
-                          <div className="w-14 h-14 rounded-full bg-primary/15 flex items-center justify-center mb-6 group-hover:bg-primary/25 transition-colors duration-300 ease-out">
-                            <item.icon className="w-7 h-7 text-primary group-hover:animate-roll-360 transition-transform duration-500 ease-out" />
-                          </div>
+                <CardContent className="p-6 lg:p-8">
+                  <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-6">
+                    <item.icon className="w-7 h-7 text-primary" />
+                  </div>
 
-                          <h3 className="text-xl font-semibold mb-3 text-foreground">
-                            {item.title}
-                          </h3>
+                  <h3 className="text-xl font-semibold mb-3 text-foreground">
+                    {item.title}
+                  </h3>
 
-                          <p className="text-muted-foreground leading-relaxed">
-                            {item.description}
-                          </p>
-                        </CardContent>
-                      </Card>
-                    </Link>
-                  ))}
+                  <p className="text-muted-foreground leading-relaxed">
+                    {item.description}
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
