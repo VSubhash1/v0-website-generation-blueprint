@@ -112,30 +112,35 @@ export function Industries() {
               >
                 <Card
                   className={`relative overflow-hidden border border-border/60 bg-card shadow-sm h-full cursor-pointer rounded-xl
-                  transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/20 active:scale-[0.98]
-                  ${visible ? `animate-fade-in-up ${delayClass}` : "opacity-0"}`}
-                >
-                  {/* Soft gradient overlay for glassmorphism */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
-                  <CardContent className="relative p-6 lg:p-8">
-                    <div className="w-14 h-14 rounded-full bg-primary/15 flex items-center justify-center mb-6 transition-colors duration-300 group-hover:bg-primary/25">
-                      <item.icon className="w-7 h-7 text-primary transition-transform duration-300 group-hover:rotate-3 group-hover:scale-110" />
-                    </div>
+                  {industries.map((item, index) => (
+                    <Link
+                      key={index}
+                      href={item.href}
+                      aria-label={item.title}
+                      className="group block"
+                    >
+                      <Card
+                        className="relative overflow-hidden border border-border/60 bg-card/80 backdrop-blur-sm shadow-sm h-full cursor-pointer rounded-xl
+                        hover-tilt-lift hover:shadow-xl hover:shadow-primary/20 hover:ring-1 hover:ring-primary/20 active:scale-[.98]
+                        transition-all duration-300 ease-out"
+                      >
+                        {/* Soft gradient overlay */}
+                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
+                        <CardContent className="relative p-6 lg:p-8">
+                          <div className="w-14 h-14 rounded-full bg-primary/15 flex items-center justify-center mb-6 group-hover:bg-primary/25 transition-colors duration-300 ease-out">
+                            <item.icon className="w-7 h-7 text-primary group-hover:animate-roll-360 transition-transform duration-500 ease-out" />
+                          </div>
 
-                    <h3 className="text-xl font-semibold mb-3 text-foreground">
-                      {item.title}
-                    </h3>
+                          <h3 className="text-xl font-semibold mb-3 text-foreground">
+                            {item.title}
+                          </h3>
 
-                    <p className="text-muted-foreground leading-relaxed">
-                      {item.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              </Link>
-            );
-          })}
-        </div>
-      </div>
-    </section>
+                          <p className="text-muted-foreground leading-relaxed">
+                            {item.description}
+                          </p>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  ))}
   );
 }
