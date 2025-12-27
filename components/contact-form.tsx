@@ -24,7 +24,7 @@ const serviceOptions = [
   "Full Digital Strategy",
 ]
 
-const budgetRanges = ["$5,000 - $10,000", "$10,000 - $25,000", "$25,000 - $50,000", "$50,000 - $100,000", "$100,000+"]
+const budgetRanges = ["₹5,00,000 - ₹10,00,000", "₹10,00,000 - ₹25,00,000", "₹25,00,000 - ₹50,00,000", "₹50,00,000 - ₹1,00,00,000", "₹1,00,00,000+"]
 
 const timelines = ["ASAP", "Within 1 month", "1-3 months", "3-6 months", "Just exploring"]
 
