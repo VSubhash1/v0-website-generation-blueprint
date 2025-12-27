@@ -29,6 +29,11 @@ const industriesServe = [
   { label: "Transportation & Logistics", href: "#industries" },
 ]
 
+const websiteServicesWithIndustries = [
+  ...websiteServices,
+  { label: "Industries We Serve", hasDropdown: true },
+]
+
 const digitalMarketing = [
   { label: "SEO Services", href: "/services/seo" },
   { label: "Lead Generation", href: "/services/lead-management" },
@@ -50,7 +55,7 @@ export function Footer() {
   return (
     <footer className="bg-background text-foreground py-12 lg:py-16">
       <div className="container mx-auto px-4 lg:px-8">
-        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12 mb-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
           {/* Company Info */}
           <div className="space-y-4">
             <Link href="/" className="flex items-center gap-2">
@@ -95,25 +100,28 @@ export function Footer() {
           <div>
             <h4 className="font-semibold text-lg mb-4 text-foreground">Website Services</h4>
             <ul className="space-y-3">
-              {websiteServices.map((item) => (
+              {websiteServicesWithIndustries.map((item) => (
                 <li key={item.label}>
-                  <Link href={item.href} className="text-muted-foreground hover:text-primary transition-colors">
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Industries We Serve */}
-          <div>
-            <h4 className="font-semibold text-lg mb-4 text-foreground">Industries We Serve</h4>
-            <ul className="space-y-3">
-              {industriesServe.map((item) => (
-                <li key={item.label}>
-                  <Link href={item.href} className="text-muted-foreground hover:text-primary transition-colors">
-                    {item.label}
-                  </Link>
+                  {item.hasDropdown ? (
+                    <div className="group relative">
+                      <button className="text-muted-foreground hover:text-primary transition-colors text-left">
+                        {item.label}
+                      </button>
+                      <ul className="ml-4 mt-2 space-y-2 hidden group-hover:block">
+                        {industriesServe.map((industry) => (
+                          <li key={industry.label}>
+                            <Link href={industry.href} className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                              {industry.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : (
+                    <Link href={item.href || "#"} className="text-muted-foreground hover:text-primary transition-colors">
+                      {item.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
