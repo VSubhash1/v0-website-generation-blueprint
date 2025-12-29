@@ -9,7 +9,8 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent } from "@/components/ui/card"
-import { Send, CheckCircle } from "lucide-react"
+import { Send, CheckCircle, AlertCircle } from "lucide-react"
+import { supabase } from "@/lib/supabase"
 
 const businessTypes = ["Startup", "Small Business", "Enterprise", "E-commerce", "Non-profit", "Other"]
 
@@ -30,10 +31,57 @@ const timelines = ["ASAP", "Within 1 month", "1-3 months", "3-6 months", "Just e
 
 export function ContactForm() {
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    company: "",
+    website: "",
+    businessType: "",
+    services: "",
+    budget: "",
+    timeline: "",
+    message: "",
+  })
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsSubmitted(true)
+    setIsSubmitting(true)
+    setError(null)
+
+    try {
+      const { error: submitError } = await supabase
+        .from('contacts')
+        .insert([
+          {
+            full_name: formData.name,
+            phone: formData.phone,
+            email: formData.email,
+            company_name: formData.company,
+            website_url: formData.website,
+            business_type: formData.businessType,
+            services_needed: formData.services,
+            budget_range: formData.budget,
+            timeline: formData.timeline,
+            project_details: formData.message,
+          }
+        ])
+
+      if (submitError) throw submitError
+
+      setIsSubmitted(true)
+    } catch (err) {
+      console.error('Error submitting form:', err)
+      setError('Failed to submit form. Please try again or contact us directly.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   if (isSubmitted) {
@@ -66,16 +114,34 @@ export function ContactForm() {
 
         <Card className="max-w-4xl mx-auto bg-card border-border">
           <CardContent className="p-6 lg:p-10">
+            {error && (
+              <div className="mb-6 p-4 bg-destructive/10 border border-destructive rounded-lg flex items-center gap-2">
+                <AlertCircle className="w-5 h-5 text-destructive" />
+                <p className="text-destructive text-sm">{error}</p>
+              </div>
+            )}
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Row 1 */}
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="name">Full Name *</Label>
-                  <Input id="name" placeholder="Client Name" required />
+                  <Input 
+                    id="name" 
+                    placeholder="Client Name" 
+                    required 
+                    value={formData.name}
+                    onChange={(e) => handleInputChange('name', e.target.value)}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="phone">Phone Number</Label>
-                  <Input id="phone" type="tel" placeholder="+91 9xxxx xxxxx" />
+                  <Input 
+                    id="phone" 
+                    type="tel" 
+                    placeholder="+91 9xxxx xxxxx"
+                    value={formData.phone}
+                    onChange={(e) => handleInputChange('phone', e.target.value)}
+                  />
                 </div>
               </div>
 
@@ -83,11 +149,23 @@ export function ContactForm() {
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="email">Email Address *</Label>
-                  <Input id="email" type="email" placeholder="client@example.com" required />
+                  <Input 
+                    id="email" 
+                    type="email" 
+                    placeholder="client@example.com" 
+                    required
+                    value={formData.email}
+                    onChange={(e) => handleInputChange('email', e.target.value)}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="company">Company Name</Label>
-                  <Input id="company" placeholder="Acme Inc." />
+                  <Input 
+                    id="company" 
+                    placeholder="Acme Inc."
+                    value={formData.company}
+                    onChange={(e) => handleInputChange('company', e.target.value)}
+                  />
                 </div>
               </div>
 
@@ -95,11 +173,17 @@ export function ContactForm() {
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="website">Website URL</Label>
-                  <Input id="website" type="url" placeholder="https://example.com" />
+                  <Input 
+                    id="website" 
+                    type="url" 
+                    placeholder="https://example.com"
+                    value={formData.website}
+                    onChange={(e) => handleInputChange('website', e.target.value)}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="businessType">Business Type</Label>
-                  <Select>
+                  <Select onValueChange={(value) => handleInputChange('businessType', value)}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select business type" />
                     </SelectTrigger>
@@ -118,7 +202,7 @@ export function ContactForm() {
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="services">Services Needed</Label>
-                  <Select>
+                  <Select onValueChange={(value) => handleInputChange('services', value)}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select service" />
                     </SelectTrigger>
@@ -133,7 +217,7 @@ export function ContactForm() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="budget">Budget Range</Label>
-                  <Select>
+                  <Select onValueChange={(value) => handleInputChange('budget', value)}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select budget" />
                     </SelectTrigger>
@@ -151,7 +235,7 @@ export function ContactForm() {
               {/* Row 5 */}
               <div className="space-y-2">
                 <Label htmlFor="timeline">When do you want to start?</Label>
-                <Select>
+                <Select onValueChange={(value) => handleInputChange('timeline', value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select timeline" />
                   </SelectTrigger>
@@ -172,12 +256,14 @@ export function ContactForm() {
                   id="message"
                   placeholder="Tell us about your project, goals, and any specific requirements..."
                   className="min-h-[150px]"
+                  value={formData.message}
+                  onChange={(e) => handleInputChange('message', e.target.value)}
                 />
               </div>
 
-              <Button type="submit" size="lg" className="w-full md:w-auto">
+              <Button type="submit" size="lg" className="w-full md:w-auto" disabled={isSubmitting}>
                 <Send className="w-4 h-4 mr-2" />
-                Send Message
+                {isSubmitting ? 'Sending...' : 'Send Message'}
               </Button>
             </form>
           </CardContent>
