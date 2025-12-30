@@ -6,14 +6,14 @@ interface FormData {
   email: string
   company: string
   website: string
-  businessType: string
+  business_type: string
   services: string
-  turnover: string
-  monthlyBudget: string
-  timeline: string
-  preferredDate: string
-  preferredTimezone: string
-  preferredMode: string
+  company_turnover: string
+  monthly_budget: string
+  start_timeline: string
+  preferred_date: string
+  preferred_timezone: string
+  preferred_mode: string
   message: string
 }
 
@@ -39,20 +39,20 @@ COMPANY INFORMATION
 -------------------
 Company Name: ${data.company || 'Not provided'}
 Website: ${data.website || 'Not provided'}
-Business Type: ${data.businessType || 'Not provided'}
-Company Turnover (₹): ${data.turnover || 'Not provided'}
+Business Type: ${data.business_type || 'Not provided'}
+Company Turnover (₹): ${data.company_turnover || 'Not provided'}
 
 PROJECT DETAILS
 ---------------
 Services Needed: ${data.services || 'Not specified'}
-Monthly Budget (₹): ${data.monthlyBudget || 'Not specified'}
-Timeline: ${data.timeline || 'Not specified'}
+Monthly Budget (₹): ${data.monthly_budget || 'Not specified'}
+Timeline: ${data.start_timeline || 'Not specified'}
 
 PREFERRED CONTACT DETAILS
 -------------------------
-Preferred Date & Time: ${data.preferredDate || 'Not specified'}
-Preferred Timezone: ${data.preferredTimezone}
-Preferred Contact Mode: ${data.preferredMode || 'Not specified'}
+Preferred Date & Time: ${data.preferred_date || 'Not specified'}
+Preferred Timezone: ${data.preferred_timezone}
+Preferred Contact Mode: ${data.preferred_mode || 'Not specified'}
 
 MESSAGE
 -------
@@ -116,11 +116,11 @@ Submission Time: ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata'
         </div>
         <div class="field">
           <div class="label">Business Type:</div>
-          <div class="value">${data.businessType || 'Not provided'}</div>
+          <div class="value">${data.business_type || 'Not provided'}</div>
         </div>
         <div class="field">
           <div class="label">Company Turnover (₹):</div>
-          <div class="value">${data.turnover || 'Not provided'}</div>
+          <div class="value">${data.company_turnover || 'Not provided'}</div>
         </div>
       </div>
 
@@ -132,11 +132,11 @@ Submission Time: ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata'
         </div>
         <div class="field">
           <div class="label">Monthly Budget (₹):</div>
-          <div class="value">${data.monthlyBudget || 'Not specified'}</div>
+          <div class="value">${data.monthly_budget || 'Not specified'}</div>
         </div>
         <div class="field">
           <div class="label">Timeline:</div>
-          <div class="value">${data.timeline || 'Not specified'}</div>
+          <div class="value">${data.start_timeline || 'Not specified'}</div>
         </div>
       </div>
 
@@ -144,15 +144,15 @@ Submission Time: ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata'
         <div class="section-title">PREFERRED CONTACT DETAILS</div>
         <div class="field">
           <div class="label">Date & Time:</div>
-          <div class="value">${data.preferredDate || 'Not specified'}</div>
+          <div class="value">${data.preferred_date || 'Not specified'}</div>
         </div>
         <div class="field">
           <div class="label">Timezone:</div>
-          <div class="value">${data.preferredTimezone}</div>
+          <div class="value">${data.preferred_timezone}</div>
         </div>
         <div class="field">
           <div class="label">Contact Mode:</div>
-          <div class="value">${data.preferredMode || 'Not specified'}</div>
+          <div class="value">${data.preferred_mode || 'Not specified'}</div>
         </div>
       </div>
 

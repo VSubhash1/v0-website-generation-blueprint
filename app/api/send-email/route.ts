@@ -10,14 +10,14 @@ interface ContactFormData {
   email: string
   company: string
   website: string
-  businessType: string
+  business_type: string
   services: string
-  turnover: string
-  monthlyBudget: string
-  timeline: string
-  preferredDate: string
-  preferredTimezone: string
-  preferredMode: string
+  company_turnover: string
+  monthly_budget: string
+  start_timeline: string
+  preferred_date: string
+  preferred_timezone: string
+  preferred_mode: string
   message: string
 }
 
