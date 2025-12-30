@@ -42,8 +42,10 @@ export async function POST(request: NextRequest) {
     )
   } catch (error) {
     console.error('API error:', error)
+    const errorMessage = error instanceof Error ? error.message : JSON.stringify(error)
+    console.error('Detailed error:', errorMessage)
     return NextResponse.json(
-      { error: 'Failed to send email' },
+      { error: 'Failed to send email', details: errorMessage },
       { status: 500 }
     )
   }

@@ -25,6 +25,10 @@ export async function sendContactFormEmail(data: FormData) {
     throw new Error('Email service is not configured')
   }
 
+  console.log('🚀 Starting email send for:', data.email)
+  console.log('RESEND_API_KEY exists:', !!process.env.RESEND_API_KEY)
+  console.log('EMAIL_FROM:', process.env.EMAIL_FROM)
+
   const emailContent = `
 New Contact Form Submission
 ============================
@@ -174,6 +178,7 @@ ${data.message || 'No additional message provided'}
 `
 
   try {
+    console.log('📧 Calling Resend API with recipients:', ['support@govira.tech', 'svanapal@gitam.in'])
     const result = await resend.emails.send({
       from: process.env.EMAIL_FROM || 'onboarding@resend.dev',
       to: ['support@govira.tech', 'svanapal@gitam.in'],
@@ -183,9 +188,10 @@ ${data.message || 'No additional message provided'}
       replyTo: data.email,
     })
 
+    console.log('✅ Email sent successfully:', result)
     return { success: true, data: result }
   } catch (error) {
-    console.error('Email sending error:', error)
+    console.error('❌ Email sending error:', error)
     throw error
   }
 }

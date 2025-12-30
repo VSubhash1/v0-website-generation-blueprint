@@ -77,26 +77,25 @@ export function ContactModal({ trigger }: ContactModalProps) {
     setError(null)
 
     try {
-      const { error: submitError } = await supabase
-        .from('contacts')
-        .insert([
-          {
-            full_name: formData.name,
-            phone: formData.phone,
-            email: formData.email,
-            company_name: formData.company,
-            website_url: formData.website,
-            business_type: formData.businessType,
-            company_turnover: formData.turnover,
-            services_needed: formData.services,
-            monthly_budget: formData.monthlyBudget,
-            timeline: formData.timeline,
-            preferred_date_time: formData.preferredDate,
-            preferred_timezone: formData.preferredTimezone,
-            preferred_contact_mode: formData.preferredMode,
-            project_details: formData.message,
-          }
-        ])
+      const preferredDateIso = formData.preferredDate ? new Date(formData.preferredDate).toISOString() : null
+      const submissionPayload = {
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email,
+        company: formData.company,
+        website: formData.website,
+        business_type: formData.businessType,
+        company_turnover: formData.turnover,
+        services: formData.services,
+        monthly_budget: formData.monthlyBudget,
+        start_timeline: formData.timeline,
+        preferred_date: preferredDateIso,
+        preferred_timezone: formData.preferredTimezone,
+        preferred_mode: formData.preferredMode,
+        message: formData.message,
+      }
+
+      const { error: submitError } = await supabase.from('contact_requests').insert([submissionPayload])
 
       if (submitError) throw submitError
 
@@ -105,11 +104,12 @@ export function ContactModal({ trigger }: ContactModalProps) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(submissionPayload),
       })
 
       if (!emailResponse.ok) {
-        console.error('Email sending failed, but form was saved to database')
+        const emailError = await emailResponse.json()
+        console.error('Email sending failed:', emailError)
       }
 
       setIsSubmitted(true)
@@ -131,7 +131,8 @@ export function ContactModal({ trigger }: ContactModalProps) {
       })
     } catch (err) {
       console.error('Form submission error:', err)
-      setError('Failed to submit form. Please try again or contact us directly.')
+      const message = err instanceof Error ? err.message : 'Failed to submit form. Please try again or contact us directly.'
+      setError(message)
     } finally {
       setIsSubmitting(false)
     }

@@ -98,7 +98,8 @@ export function ContactForm() {
       })
 
       if (!emailResponse.ok) {
-        console.error('Email sending failed, but form was saved to database')
+        const emailError = await emailResponse.json()
+        console.error('Email sending failed:', emailError)
       }
 
       setIsSubmitted(true)
