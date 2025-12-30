@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Menu, X, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { ContactModal } from "@/components/contact-modal"
 
 const navItems = [
   { label: "Home", href: "/" },
@@ -79,9 +80,8 @@ export function Header() {
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <img src="https://image2url.com/images/1765796822907-5d6e2d7e-9bfa-4ba7-ab5a-254ac83fb419.png" alt="Govira Logo" className="w-8 h-8" />
-            <span className="font-semibold text-xl text-foreground">Govira</span>
+          <Link href="/" className="flex items-center">
+            <img src="/govira-logo.png" alt="Govira Technologies" className="h-16 lg:h-20" />
           </Link>
 
           {/* Desktop Navigation */}
@@ -147,9 +147,9 @@ export function Header() {
 
           {/* CTA Button and Hamburger Menu */}
           <div className="hidden lg:flex items-center gap-3">
-            <Button asChild>
-              <Link href="#contact">Book a call</Link>
-            </Button>
+            <ContactModal 
+              trigger={<Button>Book a call</Button>}
+            />
             <div className="relative">
               <button
                 onClick={() => setIsFooterMenuOpen(!isFooterMenuOpen)}
@@ -204,11 +204,13 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
-            <Button asChild className="mt-2">
-              <Link href="#contact" onClick={() => setIsMobileMenuOpen(false)}>
-                Book a call
-              </Link>
-            </Button>
+            <ContactModal 
+              trigger={
+                <Button className="mt-2 w-full" onClick={() => setIsMobileMenuOpen(false)}>
+                  Book a call
+                </Button>
+              }
+            />
           </nav>
         </div>
       )}

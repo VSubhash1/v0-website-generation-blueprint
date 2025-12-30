@@ -15,19 +15,19 @@ import { supabase } from "@/lib/supabase"
 const businessTypes = ["Startup", "Small Business", "Enterprise", "E-commerce", "Non-profit", "Other"]
 
 const serviceOptions = [
-  "Web Design",
-  "Web Development",
-  "E-Commerce",
   "SEO",
-  "PPC Advertising",
-  "Social Media Marketing",
-  "Lead Generation",
-  "Full Digital Strategy",
+  "Lead Generation/PPC",
+  "Social Media Management",
+  "Website Design",
+  "E-Commerce",
+  "Other",
 ]
 
 const budgetRanges = ["₹5,00,000 - ₹10,00,000", "₹10,00,000 - ₹25,00,000", "₹25,00,000 - ₹50,00,000", "₹50,00,000 - ₹1,00,00,000", "₹1,00,00,000+"]
 
 const timelines = ["ASAP", "Within 1 month", "1-3 months", "3-6 months", "Just exploring"]
+
+const preferredModes = ["Call", "Email", "Video Meeting", "Chat"]
 
 export function ContactForm() {
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -41,13 +41,24 @@ export function ContactForm() {
     website: "",
     businessType: "",
     services: "",
-    budget: "",
+    turnover: "",
+    monthlyBudget: "",
     timeline: "",
+    preferredDate: "",
+    preferredTimezone: "Asia/Kolkata",
+    preferredMode: "",
     message: "",
   })
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
+  }
+
+  const handleServiceChange = (service: string) => {
+    setFormData(prev => ({ 
+      ...prev, 
+      services: prev.services === service ? "" : service 
+    }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -56,29 +67,45 @@ export function ContactForm() {
     setError(null)
 
     try {
-      const { error: submitError } = await supabase
-        .from('contacts')
-        .insert([
-          {
-            full_name: formData.name,
-            phone: formData.phone,
-            email: formData.email,
-            company_name: formData.company,
-            website_url: formData.website,
-            business_type: formData.businessType,
-            services_needed: formData.services,
-            budget_range: formData.budget,
-            timeline: formData.timeline,
-            project_details: formData.message,
-          }
-        ])
+      const preferredDateIso = formData.preferredDate ? new Date(formData.preferredDate).toISOString() : null
+      const submissionPayload = {
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email,
+        company: formData.company,
+        website: formData.website,
+        business_type: formData.businessType,
+        company_turnover: formData.turnover,
+        services: formData.services,
+        monthly_budget: formData.monthlyBudget,
+        start_timeline: formData.timeline,
+        preferred_date: preferredDateIso,
+        preferred_timezone: formData.preferredTimezone,
+        preferred_mode: formData.preferredMode,
+        message: formData.message,
+      }
+
+      const { error: submitError } = await supabase.from('contact_requests').insert([submissionPayload])
 
       if (submitError) throw submitError
 
+      const emailResponse = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submissionPayload),
+      })
+
+      if (!emailResponse.ok) {
+        console.error('Email sending failed, but form was saved to database')
+      }
+
       setIsSubmitted(true)
     } catch (err) {
-      console.error('Error submitting form:', err)
-      setError('Failed to submit form. Please try again or contact us directly.')
+      console.error('Form submission error:', err)
+      const message = err instanceof Error ? err.message : 'Failed to submit form. Please try again or contact us directly.'
+      setError(message)
     } finally {
       setIsSubmitting(false)
     }
@@ -106,7 +133,7 @@ export function ContactForm() {
     <section id="contact" className="py-16 lg:py-24">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="text-center mb-12 lg:mb-16">
-          <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-foreground">Get in Touch</h2>
+          <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-foreground">Get in Touch with us</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
             Ready to start your project? Fill out the form below and we'll get back to you shortly.
           </p>
@@ -121,58 +148,54 @@ export function ContactForm() {
               </div>
             )}
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Row 1 */}
-              <div className="grid md:grid-cols-2 gap-6">
+              {/* Row 1 - Name, Phone, Email */}
+              <div className="grid md:grid-cols-3 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Full Name *</Label>
+                  <Label htmlFor="name">YOUR NAME</Label>
                   <Input 
                     id="name" 
-                    placeholder="Client Name" 
+                    placeholder="Full Name" 
                     required 
                     value={formData.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
+                  <Label htmlFor="phone">PHONE NUMBER</Label>
                   <Input 
                     id="phone" 
                     type="tel" 
-                    placeholder="+91 9xxxx xxxxx"
+                    placeholder="91234 56789"
                     value={formData.phone}
                     onChange={(e) => handleInputChange('phone', e.target.value)}
                   />
                 </div>
-              </div>
-
-              {/* Row 2 */}
-              <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email Address *</Label>
+                  <Label htmlFor="email">EMAIL</Label>
                   <Input 
                     id="email" 
                     type="email" 
-                    placeholder="client@example.com" 
+                    placeholder="your@email.com" 
                     required
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
                   />
                 </div>
+              </div>
+
+              {/* Row 2 - Company & Website */}
+              <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="company">Company Name</Label>
+                  <Label htmlFor="company">COMPANY NAME</Label>
                   <Input 
                     id="company" 
-                    placeholder="Acme Inc."
+                    placeholder="Company Name"
                     value={formData.company}
                     onChange={(e) => handleInputChange('company', e.target.value)}
                   />
                 </div>
-              </div>
-
-              {/* Row 3 */}
-              <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="website">Website URL</Label>
+                  <Label htmlFor="website">WEBSITE LINK (OPTIONAL)</Label>
                   <Input 
                     id="website" 
                     type="url" 
@@ -181,11 +204,15 @@ export function ContactForm() {
                     onChange={(e) => handleInputChange('website', e.target.value)}
                   />
                 </div>
+              </div>
+
+              {/* Row 3 - Business Type & Turnover */}
+              <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="businessType">Business Type</Label>
-                  <Select onValueChange={(value) => handleInputChange('businessType', value)}>
+                  <Label htmlFor="businessType">BUSINESS TYPE</Label>
+                  <Select value={formData.businessType} onValueChange={(value) => handleInputChange('businessType', value)}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select business type" />
+                      <SelectValue placeholder="please select" />
                     </SelectTrigger>
                     <SelectContent>
                       {businessTypes.map((type) => (
@@ -196,62 +223,114 @@ export function ContactForm() {
                     </SelectContent>
                   </Select>
                 </div>
+                <div className="space-y-2">
+                  <Label htmlFor="turnover">COMPANY TURNOVER (₹)</Label>
+                  <Input 
+                    id="turnover" 
+                    type="text"
+                    placeholder="e.g., 50 Lakhs"
+                    value={formData.turnover}
+                    onChange={(e) => handleInputChange('turnover', e.target.value)}
+                  />
+                </div>
               </div>
 
-              {/* Row 4 */}
+              {/* Row 4 - Services (Radio buttons) */}
+              <div className="space-y-3">
+                <Label>WHAT SERVICES ARE YOU LOOKING FOR?</Label>
+                <div className="flex flex-wrap gap-3">
+                  {serviceOptions.map((service) => (
+                    <button
+                      key={service}
+                      type="button"
+                      onClick={() => handleServiceChange(service)}
+                      className={`px-4 py-2 rounded-full text-sm font-medium transition-all border ${
+                        formData.services === service
+                          ? 'bg-primary text-primary-foreground border-primary'
+                          : 'bg-background border-border hover:border-primary/50'
+                      }`}
+                    >
+                      {service}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Row 5 - Monthly Budget & Timeline */}
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="services">Services Needed</Label>
-                  <Select onValueChange={(value) => handleInputChange('services', value)}>
+                  <Label htmlFor="monthlyBudget">MONTHLY BUDGET (₹)</Label>
+                  <Select value={formData.monthlyBudget} onValueChange={(value) => handleInputChange('monthlyBudget', value)}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select service" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {serviceOptions.map((service) => (
-                        <SelectItem key={service} value={service.toLowerCase().replace(/\s+/g, "-")}>
-                          {service}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="budget">Budget Range</Label>
-                  <Select onValueChange={(value) => handleInputChange('budget', value)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select budget" />
+                      <SelectValue placeholder="please select" />
                     </SelectTrigger>
                     <SelectContent>
                       {budgetRanges.map((budget) => (
-                        <SelectItem key={budget} value={budget.toLowerCase().replace(/\s+/g, "-")}>
+                        <SelectItem key={budget} value={budget}>
                           {budget}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
+                <div className="space-y-2">
+                  <Label htmlFor="timeline">HOW SOON WOULD YOU LIKE TO GET STARTED?</Label>
+                  <Select value={formData.timeline} onValueChange={(value) => handleInputChange('timeline', value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="please select" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {timelines.map((timeline) => (
+                        <SelectItem key={timeline} value={timeline}>
+                          {timeline}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
-              {/* Row 5 */}
-              <div className="space-y-2">
-                <Label htmlFor="timeline">When do you want to start?</Label>
-                <Select onValueChange={(value) => handleInputChange('timeline', value)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select timeline" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {timelines.map((timeline) => (
-                      <SelectItem key={timeline} value={timeline.toLowerCase().replace(/\s+/g, "-")}>
-                        {timeline}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+              {/* Row 6 - Preferred Date, Timezone & Mode */}
+              <div className="grid md:grid-cols-3 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="preferredDate">PREFERRED DATE & TIME</Label>
+                  <Input 
+                    id="preferredDate" 
+                    type="datetime-local"
+                    value={formData.preferredDate}
+                    onChange={(e) => handleInputChange('preferredDate', e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="timezone">PREFERRED TIMEZONE</Label>
+                  <Input 
+                    id="timezone" 
+                    type="text"
+                    placeholder="Asia/Kolkata"
+                    value={formData.preferredTimezone}
+                    onChange={(e) => handleInputChange('preferredTimezone', e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="mode">PREFERRED MODE</Label>
+                  <Select value={formData.preferredMode} onValueChange={(value) => handleInputChange('preferredMode', value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="please select" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {preferredModes.map((mode) => (
+                        <SelectItem key={mode} value={mode}>
+                          {mode}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
               {/* Message */}
               <div className="space-y-2">
-                <Label htmlFor="message">Project Details</Label>
+                <Label htmlFor="message">MESSAGE</Label>
                 <Textarea
                   id="message"
                   placeholder="Tell us about your project, goals, and any specific requirements..."
@@ -261,9 +340,9 @@ export function ContactForm() {
                 />
               </div>
 
-              <Button type="submit" size="lg" className="w-full md:w-auto" disabled={isSubmitting}>
+              <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
                 <Send className="w-4 h-4 mr-2" />
-                {isSubmitting ? 'Sending...' : 'Send Message'}
+                {isSubmitting ? 'Sending...' : 'Submit'}
               </Button>
             </form>
           </CardContent>

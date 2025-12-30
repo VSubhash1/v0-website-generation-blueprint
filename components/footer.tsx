@@ -58,9 +58,8 @@ export function Footer() {
         <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
           {/* Company Info */}
           <div className="space-y-4">
-            <Link href="/" className="flex items-center gap-2">
-              <img src="https://image2url.com/images/1765796822907-5d6e2d7e-9bfa-4ba7-ab5a-254ac83fb419.png" alt="Govira Logo" className="w-8 h-8" />
-              <span className="font-semibold text-xl text-foreground">Govira</span>
+            <Link href="/" className="flex items-center">
+              <img src="/govira-logo.png" alt="Govira Technologies" className="h-16" />
             </Link>
             <p className="text-muted-foreground leading-relaxed">
               Empowering your digital growth with expert solutions.

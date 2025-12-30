@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
+import { ContactModal } from "@/components/contact-modal"
 
 const stats = [
   { value: "5+", label: "Projects Delivered", isText: true, suffix: "" },
@@ -94,12 +95,14 @@ export function Hero() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Button size="lg" asChild className="group">
-                <Link href="#contact">
-                  Get Started
-                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </Button>
+              <ContactModal 
+                trigger={
+                  <Button size="lg" className="group">
+                    Get Started
+                    <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                }
+              />
               <Button size="lg" variant="outline" asChild className="bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20">
                 <Link href="#portfolio">View Portfolio</Link>
               </Button>
